@@ -65,6 +65,7 @@ console.log(Boolean(friend));
 console.log(Boolean(' ')); //빈문자와 공백문자는 다르다
 console.log(Boolean(0));
 console.log(Boolean('0'));
+// 느낌표 두개를 !! 작성하면 암시적으로 변환가능
 
 // 위에 나열한 것 이외의 것들
 
