@@ -58,6 +58,10 @@ createUser('김보미', 43);
 
 // 자바스크립트 함수는 양면의 얼굴 ( 일반함수 / 생성자함수 )
 
+const c = () => {};
+
+class C {}
+
 // 나는 일반함수를 만들었고 일반함수를 사용하길 원함
 
 // const Button = ()=>{
@@ -99,6 +103,8 @@ const user = {
   address: '서울시 중랑구 면목동',
   grades: [80, 40, 15],
   totalGrades() {
+    // const self = this;
+
     this.grades.forEach((item) => {
       this.total += item;
     });
@@ -114,10 +120,52 @@ const user = {
   },
 };
 
+console.clear();
+
 /* 다음 함수를 작성해봅니다. -------------------------------------------------- */
 
 // pow(numeric: number, powerCount: number): number;
-let pow;
 
+let pow = (numeric, powerCount) => {
+  let result = 1;
+  for (let i = 0; i < powerCount; i++) result *= numeric;
+  return result;
+};
+
+// console.log(pow(2,53));
+
+// let powExpression = (numeric,powCount) => Array(powCount).fill(null).reduce(acc => acc * numeric,1);
+
+let powExpression = (numeric, powCount) => {
+  return Array(powCount)
+    .fill(null)
+    .reduce((acc) => {
+      return acc * numeric;
+    }, 1);
+};
+
+// 반복문
 // repeat(text: string, repeatCount: number): string;
-let repeat;
+let repeat = (text, repeatCount) => {
+  let result = [];
+
+  for (let i = 0; i < repeatCount; i++) {
+    result += text;
+  }
+
+  return result;
+};
+
+// 배열의 반복
+
+// let repeatExpression = (text,repeatCount)=> Array(repeatCount).fill(null).reduce(acc=>acc + text,'');
+
+let repeatExpression = (text, repeatCount) => {
+  return Array(repeatCount)
+    .fill(null)
+    .reduce((acc) => {
+      return acc + text;
+    }, '');
+};
+
+repeat('hello😘', 3); // 'hello😘hello😘hello😘'
