@@ -1,6 +1,59 @@
-/* eslint no-undef:off */
-//* off 는 끄는거고 warn은 경고로 바꿈
-// ? 에러를 인식해서 그 부분  eslint를 끌수있다
-//! 그리고 disable을 하면 다 끄는것
+/* global getNode, insertLast, clearContents, getNodes */
 
-console.log("안녕 자바스크립트!");
+import {
+  getNode,
+  getNodes,
+  insertLast,
+  clearContents,
+  refError,
+} from './lib/index.js';
+
+function phase1() {
+  const first = getNode('#firstNumber');
+  const second = getNode('#secondNumber');
+  const result = getNode('.result');
+  const clear = getNode('#clear');
+
+  function handleInput() {
+    const firstValue = Number(first.value);
+    const secondValue = Number(second.value);
+    const total = firstValue + secondValue;
+
+    clearContents(result);
+    insertLast(result, total);
+  }
+
+  function handleClear(e) {
+    e.preventDefault();
+    clearContents(first);
+    clearContents(second);
+    result.textContent = '-';
+  }
+
+  first.addEventListener('input', handleInput);
+  second.addEventListener('input', handleInput);
+  clear.addEventListener('click', handleClear);
+}
+
+const calculator = getNode('.calculator');
+const result = getNode('.result');
+const clear = getNode('#clear');
+const numberInputs = Array.from(getNodes('input:not(#clear)'));
+
+function handleInput() {
+  const total = numberInputs.reduce((acc, cur) => acc + Number(cur.value), 0);
+
+  clearContents(result);
+  insertLast(result, total);
+}
+
+function handleClear(e) {
+  e.preventDefault();
+
+  numberInputs.forEach(clearContents);
+
+  result.textContent = '-';
+}
+
+calculator.addEventListener('input', handleInput);
+clear.addEventListener('click', handleClear);
