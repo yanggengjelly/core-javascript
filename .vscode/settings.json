@@ -1,0 +1,6 @@
+{
+  "editor.tokenColorCustomizations": {
+		"comments": "#009688",
+		"textMateRules": []
+	}
+}

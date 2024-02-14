@@ -1,5 +1,11 @@
 /* global getNode, insertLast, clearContents, getNodes */
 
+// named export (이름 내보내기) 여러개 내보내기  -> { 이름 }
+
+// vs
+
+// default export (기본 내보내기) 무조건 하나만 내보내기 => 이름
+
 import {
   getNode,
   getNodes,
@@ -7,6 +13,8 @@ import {
   clearContents,
   refError,
 } from './lib/index.js';
+
+// import clearContents from "./lib/dom/clear.js"; // next.js
 
 function phase1() {
   const first = getNode('#firstNumber');
