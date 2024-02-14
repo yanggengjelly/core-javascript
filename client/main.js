@@ -1,6 +1,74 @@
-/* eslint no-undef:off */
-//* off 는 끄는거고 warn은 경고로 바꿈
-// ? 에러를 인식해서 그 부분  eslint를 끌수있다
-//! 그리고 disable을 하면 다 끄는것
+import {
+  copy,
+  shake,
+  getNode,
+  getRandom,
+  showAlert,
+  insertLast,
+  clearContents,
+  isNumericString,
+} from './lib/index.js';
 
-console.log("안녕 자바스크립트!");
+import jujeobData from './data/data.js';
+
+// 모듈 프로그래밍 사용해서
+
+// [phase-1]
+// 1. 주접 떨기 버튼을 클릭할 수 있는 핸들러를 연결해 주세요.
+//    - button     click      addEventListener
+// 2. input 값을 (콘솔에)가져와 주세요.
+//    - input   value  console.log
+// 3. jujeob 데이터를 가져오기
+
+// 4. jujeobData 함수에 input.value를 넣어주세요
+// 5. 랜덤한 주접 한개를 pick
+//    - jujeobData => return  ???
+//    - array =>  array[] + getRandom( n )
+
+// 6. pick을 result에 랜더링해주세요.
+//    - result 내용 비우기 ( clearContents, node.textContent = '')
+//    - pick text => insertAdjacentHTML('beforeend',text) , insertLast()
+
+// [phase-2]
+// 1. 아무 값도 입력 받지 못했을 때 예외처리 (alert)
+// 2. 공백 문자를 받았을 때 예외처리 (alert)
+//    - String.prototype.replace  +  regExp
+// 3. 숫자형 문자를 받았을 때 예외처리 (alert)
+
+const submit = getNode('#submit');
+const nameField = getNode('#nameField');
+const result = getNode('.result');
+
+/*global gsap */
+
+function handleJujeob(e) {
+  e.preventDefault();
+  const name = nameField.value;
+  const list = jujeobData(name);
+  const pick = list[getRandom(list.length)];
+
+  if (!name || name.replace(/\s*/g, '') === '') {
+    showAlert('.alert-error', '이름을 입력해주세요');
+    shake.restart();
+    return;
+  }
+
+  if (!isNumericString(name)) {
+    showAlert('.alert-error', '제대로된 이름을 입력해주세요 !');
+    return;
+  }
+  clearContents(result);
+  insertLast(result, pick);
+}
+
+function handleCopy() {
+  const text = this.textContent;
+  if (nameField.value) {
+    copy(text).then(() => {
+      showAlert('.alert-success', '클립보드에 복사 되었습니다 !');
+    });
+  }
+}
+
+submit.addEventListener('click', handleJujeob);
+result.addEventListener('click', handleCopy);
