@@ -5,6 +5,7 @@ import {
   insertLast,
   diceAnimation,
   clearContents,
+  memo,
 } from './lib/index.js';
 
 // [phase-1]
@@ -42,6 +43,8 @@ function createItem(value) {
     </tr>
   `;
 }
+
+memo('cube');
 
 function renderRecordItem() {
   const cube = getNode('#cube');
