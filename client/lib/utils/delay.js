@@ -90,3 +90,9 @@ delayP(2000)
     return delayP(1000);
   })
   .catch(() => {});
+
+// const promise = new Promise((a,b)=>{
+//   b('실패!')
+// })
+
+// console.log( promise );
