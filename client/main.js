@@ -1,4 +1,11 @@
-import { diceAnimation, getNode, getNodes, insertLast } from './lib/index.js';
+import {
+  getNode,
+  getNodes,
+  endScroll,
+  insertLast,
+  diceAnimation,
+  clearContents,
+} from './lib/index.js';
 
 // [phase-1]
 // 1. 주사위 굴리기 버튼을 누르면 diceAnimation() 실행될 수 있도록
@@ -21,9 +28,20 @@ const [rollingButton, recordButton, resetButton] = getNodes(
   '.buttonGroup > button'
 );
 const recordListWrapper = getNode('.recordListWrapper');
+const table = getNode('tbody');
 
 let count = 0;
 let total = 0;
+
+function createItem(value) {
+  return `
+    <tr>
+      <td>${++count}</td>
+      <td>${value}</td>
+      <td>${(total += value)}</td>
+    </tr>
+  `;
+}
 
 function renderRecordItem() {
   const cube = getNode('#cube');
@@ -32,17 +50,8 @@ function renderRecordItem() {
   // const diceValue = cube.dataset.dice / 1
   const diceValue = +cube.dataset.dice;
 
-  const template = `
-    <tr>
-      <td>${++count}</td>
-      <td>${diceValue}</td>
-      <td>${(total += diceValue)}</td>
-    </tr>
-  `;
-
-  insertLast('.recordList tbody', template);
-
-  // 랜더링
+  insertLast('.recordList tbody', createItem(diceValue));
+  endScroll(recordListWrapper);
 }
 
 // IIFE
@@ -71,5 +80,16 @@ function handleRecord() {
   renderRecordItem();
 }
 
+function handleReset() {
+  recordListWrapper.hidden = true;
+  clearContents(table);
+  count = 0;
+  total = 0;
+
+  recordButton.disabled = true;
+  resetButton.disabled = true;
+}
+
 rollingButton.addEventListener('click', handleRollingDice);
 recordButton.addEventListener('click', handleRecord);
+resetButton.addEventListener('click', handleReset);
