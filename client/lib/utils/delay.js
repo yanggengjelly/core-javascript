@@ -1,5 +1,7 @@
-import { getNode } from '../dom/index.js';
+import { getNode, insertLast } from '../dom/index.js';
 import { isNumber, isObject } from './typeOf.js';
+import { xhrPromise } from './xhr.js';
+import { tiger } from './yanggeng.js';
 
 const first = getNode('.first');
 const second = getNode('.second');
@@ -44,7 +46,7 @@ const defaultOptions = {
   errorMessage: '알 수 없는 오류가 발생했습니다.',
 };
 
-function delayP(options) {
+export function delayP(options) {
   let config = { ...defaultOptions };
 
   if (isNumber(options)) {
@@ -68,31 +70,72 @@ function delayP(options) {
   });
 }
 
-delayP(2000)
-  .then((res) => {
-    console.log(res);
+// delayP(2000)
+//   .then((res) => {
+//     console.log(res);
 
-    first.style.top = '-100px';
-    second.style.top = '100px';
+//     first.style.top = '-100px';
+//     second.style.top = '100px';
 
-    return delayP(1000);
-  })
-  .then((res) => {
-    first.style.transform = 'rotate(360deg)';
-    second.style.transform = 'rotate(-360deg)';
+//     return delayP(1000);
+//   })
+//   .then((res) => {
+//     first.style.transform = 'rotate(360deg)';
+//     second.style.transform = 'rotate(-360deg)';
 
-    return delayP(1000);
-  })
-  .then((res) => {
-    first.style.top = '0';
-    second.style.top = '0';
+//     return delayP(1000);
+//   })
+//   .then((res) => {
+//     first.style.top = '0';
+//     second.style.top = '0';
 
-    return delayP(1000);
-  })
-  .catch(() => {});
+//     return delayP(1000);
+//   })
+//   .catch(() => {});
 
 // const promise = new Promise((a,b)=>{
 //   b('실패!')
 // })
 
 // console.log( promise );
+
+// !
+// async : 함수의 리턴값을 무조건 Promise<Object>
+
+async function delayA(data) {
+  return data;
+}
+
+// delayA('양준호').then(console.log);
+
+// const result = await delayA('양준호');
+// console.log(result);
+
+//!
+// async function 라면끓이기() {
+//   console.log('물');
+//   await delayP();
+//   // 코드의 흐름제어
+//   console.log('스프');
+//   await delayP();
+
+//   console.log('면');
+//   await delayP();
+
+//   console.log('그릇');
+//   await delayP();
+// }
+
+// 라면끓이기();
+
+//!
+
+async function getData() {
+  const response = await tiger.get('https://pokeapi.co/api/v2/pokemon/1');
+
+  const imgSrc = response.data.sprites.other.showdown['front_default'];
+
+  insertLast('h1', `<img src="${imgSrc}" alt="" />`);
+}
+
+// getData();

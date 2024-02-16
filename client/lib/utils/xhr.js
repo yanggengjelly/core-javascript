@@ -106,10 +106,33 @@ xhr.delete = (url, onSuccess, onFail) => {
 /*                  xhr Promise                 */
 /* -------------------------------------------- */
 
-function xhrPromise(method, url, body) {
+const defaultOptions = {
+  method: 'GET',
+  url: '',
+  body: null,
+  errorMessage: '서버와의 통신이 원활하지 않습니다.',
+  headers: {
+    'Content-Type': 'application/json',
+    'Access-Control-Allow-Origin': '*',
+  },
+};
+
+export function xhrPromise(options) {
+  //mixin
+
+  const { method, url, body, errorMessage, headers } = {
+    ...defaultOptions,
+    ...options,
+    headers: { ...defaultOptions.headers, ...options.headers },
+  };
+
   const xhr = new XMLHttpRequest();
 
   xhr.open(method, url);
+
+  Object.entries(headers).forEach(([key, value]) => {
+    xhr.setRequestHeader(key, value);
+  });
 
   xhr.send(JSON.stringify(body));
 
@@ -127,10 +150,50 @@ function xhrPromise(method, url, body) {
   });
 }
 
-xhrPromise('GET', END_POINT)
-  .then((res) => {
-    console.log(res);
-  })
-  .catch((err) => {
-    err.message;
+// xhrPromise({
+//   method: 'GET',
+//   url: END_POINT,
+// })
+//   .then((res) => {
+//     console.log(res);
+//   })
+//   .catch((err) => {
+//     err.message;
+//   });
+
+xhrPromise.get = (url) => {
+  return xhrPromise({ url });
+};
+
+xhrPromise.post = (url, body) => {
+  return xhrPromise({
+    method: 'POST',
+    url,
+    body,
   });
+};
+
+xhrPromise.put = (url, body) => {
+  return xhrPromise({
+    method: 'PUT',
+    url,
+    body,
+  });
+};
+
+xhrPromise.delete = (url, body) => {
+  return xhrPromise({
+    method: 'DELETE',
+    url,
+    body,
+  });
+};
+
+// xhrPromise.get(END_POINT).then(console.log);
+
+// xhrPromise.delete(END_POINT).then(console.log).catch(console.log);
+
+// xhrPromise
+//   .post(END_POINT, { name: 'tiger' })
+//   .then(console.log)
+//   .catch(console.log);
