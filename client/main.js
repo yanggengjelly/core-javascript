@@ -7,11 +7,12 @@ import {
   changeColor,
   getNode as $,
   renderSpinner,
+  clearContents,
   renderUserCard,
   renderEmptyCard,
 } from './lib/index.js';
 
-const END_POINT = 'https://jsonplaceholder.typicode.com/users';
+const END_POINT = 'http://localhost:3000/users';
 
 const userCardInner = $('.user-card-inner');
 
@@ -61,6 +62,11 @@ async function renderUserList() {
 
 renderUserList();
 
+// [phase-2]
+// 1. delete 통신 이후
+// 2. 기존 유저의 목록 제거
+// 3. 유저 목록 fetch 이후 다시 렌더링
+
 function handleDelete(e) {
   const button = e.target.closest('button');
   const article = e.target.closest('article');
@@ -69,11 +75,54 @@ function handleDelete(e) {
 
   const id = article.dataset.index.slice(5);
 
-  console.log(id);
-
-  // tiger.delete()
-
-  // article의 dataset.index
+  tiger.delete(`${END_POINT}/${id}`).then(() => {
+    clearContents(userCardInner);
+    renderUserList();
+  });
 }
 
 userCardInner.addEventListener('click', handleDelete);
+
+const createButton = $('.create');
+const cancelButton = $('.cancel');
+const doneButton = $('.done');
+
+const handleCreate = () => gsap.to('.pop', { autoAlpha: 1 });
+
+const handleCancel = (e) => {
+  e.stopPropagation();
+  gsap.to('.pop', { autoAlpha: 0 });
+};
+
+const handleDone = (e) => {
+  e.preventDefault(); // html 태그의 기본 동작 차단
+
+  // name 값 가져오기
+  // email 값 가져오기
+  // website 값 가져오기
+
+  const name = $('#nameField').value;
+  const email = $('#emailField').value;
+  const website = $('#siteField').value;
+
+  // post 통신
+
+  // - 1. name,email,website 담고있는 새로운 객체를 생성
+  const obj = { name, email, website };
+
+  // - 2. post 통신의 body에 객체 전달
+  tiger.post(END_POINT, obj).then(() => {
+    // - 3. 유저 목록 지우기 (clearContents)
+    clearContents(userCardInner);
+
+    // - 4. 유저 목록 렌더링하기 (renderUserList)
+    renderUserList();
+
+    // - 5. 팝업창 닫기 (gsap)
+    gsap.to('.pop', { autoAlpha: 0 });
+  });
+};
+
+createButton.addEventListener('click', handleCreate);
+cancelButton.addEventListener('click', handleCancel);
+doneButton.addEventListener('click', handleDone);
